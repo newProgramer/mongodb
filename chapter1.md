@@ -136,7 +136,7 @@ db.collection.find().pretty() #格式化查询出来的文档
 | 大于等于 |  |
 | 不等于 |  |
 
-### AND 
+### AND
 
 MongoDB 的 find\(\) 方法可以传入多个键\(key\)，每个键\(key\)以逗号隔开，即常规 SQL 的 AND 条件。
 
@@ -208,7 +208,41 @@ db.COLLECTION_NAME.find().sort({KEY:1}) #KEY排序的字段，1 升序排列，-
 
 # 索引
 
+```
+db.collection.createIndex(keys, options)
+```
 
+createIndex\(\) 接收可选参数，可选参数列表如下：
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| background | Boolean | 建索引过程会阻塞其它数据库操作，background可指定以后台方式创建索引，即增加 "background" 可选参数。 "background" 默认值为**false**。 |
+| unique | Boolean | 建立的索引是否唯一。指定为true创建唯一索引。默认值为**false**. |
+| name | string | 索引的名称。如果未指定，MongoDB的通过连接索引的字段名和排序顺序生成一个索引名称。 |
+| dropDups | Boolean | 在建立唯一索引时是否删除重复记录,指定 true 创建唯一索引。默认值为 **false**. |
+| sparse | Boolean | 对文档中不存在的字段数据不启用索引；这个参数需要特别注意，如果设置为true的话，在索引字段中不会查询出不包含对应字段的文档.。默认值为 **false**. |
+| expireAfterSeconds | integer | 指定一个以秒为单位的数值，完成 TTL设定，设定集合的生存时间。 |
+| v | index version | 索引的版本号。默认的索引版本取决于mongod创建索引时运行的版本。 |
+| weights | document | 索引权重值，数值在 1 到 99,999 之间，表示该索引相对于其他索引字段的得分权重。 |
+| default\_language | string | 对于文本索引，该参数决定了停用词及词干和词器的规则的列表。 默认为英语 |
+| language\_override | string | 对于文本索引，该参数指定了包含在文档中的字段名，语言覆盖默认的language，默认值为 language. |
+
+# 聚合
+
+```
+db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)
+```
+
+| 表达式 | 描述 | 实例 |
+| :--- | :--- | :--- |
+| $sum | 计算总和。 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", num\_tutorial : {$sum : "$likes"}}}\]\) |
+| $avg | 计算平均值 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", num\_tutorial : {$avg : "$likes"}}}\]\) |
+| $min | 获取集合中所有文档对应值得最小值。 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", num\_tutorial : {$min : "$likes"}}}\]\) |
+| $max | 获取集合中所有文档对应值得最大值。 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", num\_tutorial : {$max : "$likes"}}}\]\) |
+| $push | 在结果文档中插入值到一个数组中。 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", url : {$push: "$url"}}}\]\) |
+| $addToSet | 在结果文档中插入值到一个数组中，但不创建副本。 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", url : {$addToSet : "$url"}}}\]\) |
+| $first | 根据资源文档的排序获取第一个文档数据。 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", first\_url : {$first : "$url"}}}\]\) |
+| $last | 根据资源文档的排序获取最后一个文档数据 | db.mycol.aggregate\(\[{$group : {\_id : "$by\_user", last\_url : {$last : "$url"}}}\]\) |
 
 
 
