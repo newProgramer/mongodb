@@ -27,7 +27,9 @@
 * 网络
 * 安全性
 
+# NoSQL
 
+NoSQL，非关系型数据库。也被称作Not Only SQL
 
 
 
